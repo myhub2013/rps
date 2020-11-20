@@ -1,12 +1,43 @@
+<!DOCTYPE html>
 <html>
-    <head></head>
+    <head><title>Simple Rock Paper Scissors</title></head>
     <body>
         <script>
+            const OPTIONS = ['Rock', 'Paper', 'Scissors'];
+
             let computerPlay = () => {
-                const options = ['Rock', 'Paper', 'Scissors'];
-                return options[Math.floor(Math.random() * options.length)];
+                return OPTIONS[Math.floor(Math.random() * OPTIONS.length)];
             }
-            console.log(computerPlay());
+
+            let playRound = (playerSelection, computerSelection) => {
+                console.log(`You chose ${playerSelection}`);
+                console.log(`Computer chose ${computerSelection}`);
+                if (playerSelection === computerSelection) {
+                    return `You both chose ${playerSelection}, Game is a tie!`;
+                }
+                if ((playerSelection === 'Rock' && computerSelection === 'Scissors') ||
+                    (playerSelection === 'Paper' && computerSelection === 'Rock') ||
+                    (playerSelection === 'Scissors' && computerSelection === 'Paper')) {
+                        return `You Win! ${playerSelection} beats ${computerSelection}`;
+                } else {
+                    return `You lose! ${computerSelection} beats ${playerSelection}`;
+                }
+            }
+
+            let playerChoice = () => {
+                let choice;
+                while (true) {
+                    choice = prompt('Enter 1 for Rock, 2 for Paper or 3 for Scissors.');
+                    var reg = new RegExp('^[1-3]$');
+                    if (!reg.test(choice)) {
+                        alert('Not valid, try again.');
+                        continue;
+                    } else { break; }
+                }
+                return OPTIONS[choice -1];
+            }
+
+            console.log(playRound(playerChoice(), computerPlay()));
         </script>
     </body>
 </html>
