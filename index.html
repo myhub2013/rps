@@ -1,34 +1,74 @@
 <!DOCTYPE html>
 <html>
-    <head><title>Simple Rock Paper Scissors</title></head>
+    <head>
+        <title>Simple Rock Paper Scissors</title>
+        <style>
+            body, html {
+                height: 100vh;
+            }
+            #contain {
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: center;
+                background-color: bisque;
+                font-family:"Lucida Console", Monaco, monospace;
+            }
+            .center {
+                text-align: center;
+            }
+            #endtext {
+                font-size: 3em;
+            }
+            #heading {
+                font-family: FreeMono, monospace;
+            }
+        </style>
+    </head>
     <body>
+        <div id="contain">
+            <div class="center" id="top">
+              <h1 id="heading">ROCK PAPER SCISSORS</h1>
+              <h4>First to 5 wins!</h4>
+            </div>
+            <div class="center">
+              <p id="endtext"></p>
+              <a href="#" id="playagain"></a>
+            </div>
+            <div class="center" id="bottom">
+              <p id="roundtext"></p>
+              <h2>Overall Score:</h2>
+              <h2 id="score">You: <span id="userscore">0</span> Computer: <span id="compscore">0</span></h2>
+            </div>
+        </div>
         <script>
             const OPTIONS = ['Rock', 'Paper', 'Scissors'];
-
-            let computerPlay = () => {
+              // Get random computer choice.
+            const computerPlay = () => {
                 return OPTIONS[Math.floor(Math.random() * OPTIONS.length)];
             }
-
-            let playRound = (playerSelection, computerSelection) => {
+              // Compare player and computer input and determine who wins round.
+            const playRound = (playerSelection, computerSelection) => {
                 console.log(`You chose ${playerSelection}`);
                 console.log(`Computer chose ${computerSelection}`);
                 if (playerSelection === computerSelection) {
-                    return `You both chose ${playerSelection}, Game is a tie!`;
+                    return `You both chose ${playerSelection}, Round is a tie!`;
                 }
                 if ((playerSelection === 'Rock' && computerSelection === 'Scissors') ||
                     (playerSelection === 'Paper' && computerSelection === 'Rock') ||
                     (playerSelection === 'Scissors' && computerSelection === 'Paper')) {
-                        return `You Win! ${playerSelection} beats ${computerSelection}`;
+                        return `You won the round! ${playerSelection} beats ${computerSelection}`;
                 } else {
-                    return `You lose! ${computerSelection} beats ${playerSelection}`;
+                    return `You lost the round! ${computerSelection} beats ${playerSelection}`;
                 }
             }
-
-            let playerChoice = () => {
+              // Let player choose weapon, validate input.
+            const playerChoice = () => {
                 let choice;
                 while (true) {
                     choice = prompt('Enter 1 for Rock, 2 for Paper or 3 for Scissors.');
-                    var reg = new RegExp('^[1-3]$');
+                    let reg = new RegExp('^[1-3]$');
                     if (!reg.test(choice)) {
                         alert('Not valid, try again.');
                         continue;
@@ -36,8 +76,28 @@
                 }
                 return OPTIONS[choice -1];
             }
+              // Reload page to start new game.
+            document.getElementById("playagain").onclick = function(event) {
+                location.reload();
+                return false;
+             };
 
-            console.log(playRound(playerChoice(), computerPlay()));
+              // Game loop. first to 5, wins.
+            let playerScore = 0, computerScore = 0;
+            do {
+                let winMessage = playRound(playerChoice(), computerPlay());
+                if (winMessage[4] === 'w') {
+                    document.getElementById("userscore").innerText = ++playerScore;
+                } else if (winMessage[4] === 'l') {
+                    document.getElementById("compscore").innerText = ++computerScore;
+                };
+                console.log(winMessage);
+                document.getElementById("roundtext").innerText = winMessage;
+            } while (playerScore < 5 && computerScore < 5);
+
+            let text = playerScore > computerScore ? "You win!" : "You lose!";  
+            document.getElementById("endtext").innerText = text;
+            document.getElementById("playagain").innerText = "play again?";
         </script>
     </body>
 </html>
